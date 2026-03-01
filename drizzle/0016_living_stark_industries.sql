@@ -1,0 +1,1 @@
+ALTER TABLE "events" ALTER COLUMN "time" SET DATA TYPE varchar(255);

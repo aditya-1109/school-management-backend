@@ -1,0 +1,1 @@
+ALTER TABLE "events" ALTER COLUMN "date" SET DATA TYPE varchar(55);

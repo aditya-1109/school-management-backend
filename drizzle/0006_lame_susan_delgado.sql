@@ -1,0 +1,1 @@
+ALTER TABLE "exams" RENAME COLUMN "content" TO "time";

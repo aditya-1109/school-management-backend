@@ -1,0 +1,1 @@
+ALTER TABLE "class" ADD COLUMN "teachersSubject" jsonb[] DEFAULT '{}';
