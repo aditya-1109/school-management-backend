@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addFee, createUser, deleteUser, getMySelf, getTopper, getUserById, getUsers, loginUser, submitFees, updateAttendance, updateMarks, updateNotification, updateUser, uploadBulkUser } from "../controller/userController.js";
+import { addFee, createUser, deleteUser, getMySelf, getTeacherWeek, getTopper, getUserById, getUsers, loginUser, submitFees, updateAttendance, updateMarks, updateNotification, updateUser, uploadBulkUser } from "../controller/userController.js";
 import { auth } from "../middleware/auth.js";
 
 
@@ -32,6 +32,8 @@ userRouter.delete("/deleteUser/:id", auth, deleteUser)
 userRouter.get("/getTopper", auth, getTopper)
 
 userRouter.put("/updateNotification/:id", auth, updateNotification)
+
+userRouter.get("/getTeacherWeek", auth, getTeacherWeek)
 
 
 export default userRouter

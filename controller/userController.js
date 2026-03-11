@@ -925,3 +925,92 @@ export const updateNotification = async (req, res) => {
         });
     }
 };
+
+export const getTeacherWeek = async (req, res) => {
+    try {
+
+        const users = await db.select().from(userTable)
+        const classes = await db.select().from(classTable)
+
+        const teachers = users.filter((u) => u.type === "teacher")
+        const students = users.filter((u) => u.type === "student")
+
+        // get start of week
+        const today = new Date()
+        const firstDay = new Date(today.setDate(today.getDate() - today.getDay()))
+
+        let bestTeacher = null
+        let bestScore = 0
+
+        for (const teacher of teachers) {
+
+            
+
+            const attendance = teacher?.attendance || []
+
+            const weeklyAttendance = attendance.filter((a) => {
+                const date = new Date(a.date)
+                return date >= firstDay && a.status === "present"
+            })
+
+            const attendanceScore = weeklyAttendance.length
+
+
+            /* ---------------------------
+            2️⃣ STUDENT MARKS SCORE
+            --------------------------- */
+
+            const teacherClasses = classes.filter((c) =>
+                teacher?.classes?.includes(Number(c.id))
+            )
+
+            let totalMarks = 0
+            let totalEntries = 0
+
+            for (const cls of teacherClasses) {
+
+                const classStudents = students.filter((s) =>
+                    cls.student?.includes(Number(s.id))
+                )
+
+                for (const student of classStudents) {
+
+                    const grades = student?.grade || []
+
+                    for (const g of grades) {
+                        totalMarks += g.marks || 0
+                        totalEntries++
+                    }
+
+                }
+            }
+
+            const marksScore = totalEntries ? totalMarks / totalEntries : 0
+
+
+            /* ---------------------------
+            3️⃣ FINAL SCORE
+            --------------------------- */
+
+            const finalScore = attendanceScore * 10 + marksScore
+
+            console.log(finalScore, attendanceScore, marksScore)
+
+            if (finalScore > bestScore) {
+                bestScore = finalScore
+                bestTeacher = teacher
+            }
+
+        }
+
+        console.log(bestTeacher)
+
+        return res.json({
+            teacherWeekId: bestTeacher?.id || teachers[0]?.id
+        })
+
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: "Something went wrong" })
+    }
+}

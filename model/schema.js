@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { date, integer, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const newUsersTable = pgTable("newUsers", {
@@ -136,5 +137,14 @@ export const communicationTable = pgTable("communication", {
     secondPerson: varchar({length: 255}).array().default([]),
     title: varchar({length: 255}).notNull(),
     type: varchar({length: 255}).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+})
+
+export const schoolInfoTable = pgTable("schoolInfo", {
+    id:  integer().primaryKey().generatedAlwaysAsIdentity(),
+    social: jsonb("social").default(sql`'[]'::jsonb`),
+    news: jsonb("news").array().default([]),
+    champ: jsonb("champ").default(sql`'[]'::jsonb`),
+    gallery: jsonb("gallery").array().default([]),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 })

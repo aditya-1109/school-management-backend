@@ -13,6 +13,7 @@ import communicationRouter from "./routes/communicationRouter.js";
 import feeRouter from "./routes/feeRouter.js";
 import newUserRouter from "./routes/newUserRouter.js";
 import eventsRouter from "./routes/eventsRouter.js";
+import infoRouter from "./routes/infoRouter.js";
 
 dotenv.config()
 
@@ -43,6 +44,8 @@ app.use("/api/fees", feeRouter)
 app.use("/api/newUser", newUserRouter)
 
 app.use("/api/events", eventsRouter)
+
+app.use("/api/info", infoRouter )
 
 
 
