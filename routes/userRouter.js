@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addFee, createUser, deleteUser, getMySelf, getTeacherWeek, getTopper, getUserById, getUsers, loginUser, submitFees, updateAttendance, updateMarks, updateNotification, updateUser, uploadBulkUser } from "../controller/userController.js";
+import { addFee, createUser, deleteUser, forgetPassword, getMySelf, getTeacherWeek, getTopper, getUserById, getUsers, loginUser, submitFees, updateAttendance, updateMarks, updateNotification, updateUser, uploadBulkUser } from "../controller/userController.js";
 import { auth } from "../middleware/auth.js";
 
 
@@ -8,6 +8,8 @@ const userRouter = Router()
 userRouter.post("/createUser", createUser)
 
 userRouter.post("/loginUser", loginUser)
+
+userRouter.put("/forgotPassword", forgetPassword)
 
 userRouter.put("/updateUser", auth, updateUser)
 

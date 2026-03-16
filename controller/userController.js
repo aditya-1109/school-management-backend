@@ -944,7 +944,7 @@ export const getTeacherWeek = async (req, res) => {
 
         for (const teacher of teachers) {
 
-            
+
 
             const attendance = teacher?.attendance || []
 
@@ -1014,3 +1014,36 @@ export const getTeacherWeek = async (req, res) => {
         return res.status(500).json({ error: "Something went wrong" })
     }
 }
+
+export const forgetPassword = async (req, res) => {
+    const { email, phone, password } = req.body;
+
+    try {
+        const user = await db
+            .select()
+            .from(userTable)
+            .where(and(eq(userTable.email, email), eq(userTable.phone, phone)));
+
+        if (!user || user.length === 0) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Could not find user" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const changed = await db
+            .update(userTable)
+            .set({ password: hashedPassword })
+            .where(and(eq(userTable.email, email), eq(userTable.phone, phone)));
+
+        return res
+            .status(200)
+            .json({ success: true, message: "Password changed successfully" });
+
+    } catch (e) {
+        return res
+            .status(500)
+            .json({ success: false, message: `Error occured: ${e.message}` });
+    }
+};
