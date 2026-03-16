@@ -3,7 +3,7 @@ import { classTable, complaintsTable, feeTable, timeTable, userTable } from "../
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import bcrypt from "bcrypt";
-import { eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 dotenv.config()
 
