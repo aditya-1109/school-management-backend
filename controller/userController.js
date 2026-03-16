@@ -1016,8 +1016,10 @@ export const getTeacherWeek = async (req, res) => {
 }
 
 export const forgetPassword = async (req, res) => {
-    const { email, phone, password } = req.body;
+    const { data } = req.body;
+    const {email, phone, password} = data
 
+    console.log(email, phone, password)
     try {
         const user = await db
             .select()
