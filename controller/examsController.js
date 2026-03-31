@@ -59,9 +59,11 @@ export const createExams = async (req, res) => {
                 )
             );
 
+       
+
         if (classData.length > 0) {
-            const studentsIds = Array.isArray(classData[0].students)
-                ? classData[0].students
+            const studentsIds = Array.isArray(classData[0].student)
+                ? classData[0].student
                 : [];
 
             if (studentsIds.length > 0) {
