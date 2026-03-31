@@ -1,6 +1,7 @@
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
 import { db } from "../index.js"
 import { communicationTable, userTable } from "../model/schema.js"
+
 
 export const createCommunication = async (req, res) => {
     const { data } = req.body;
