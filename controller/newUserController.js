@@ -183,6 +183,12 @@ export const approveNewUser = async (req, res) => {
         .set({ status: "approved" })
         .where(eq(newUsersTable.id, Number(id)))
         .returning();
+
+        return res.status(200).json({
+          success: true,
+          data: updatedUser[0],
+          message: "User approved successfully",
+        });
     } catch (error) {
       return res.status(500).json({
         success: false,
