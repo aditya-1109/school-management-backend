@@ -90,8 +90,14 @@ export const createUser = async (req, res) => {
             });
         }
 
+        console.log(Object.keys(data));
+
         // 🔐 Hash password
         const hashedPassword = await bcrypt.hash(data.password, 10);
+
+        console.log("Creating user with data:", { ...data, password: hashedPassword });
+
+        
 
         // ✅ Create user first
         const [newUser] = await db
@@ -99,7 +105,7 @@ export const createUser = async (req, res) => {
             .values({
                 ...data,
                 password: hashedPassword,
-                connections: data.connections || []
+                
             })
             .returning();
 

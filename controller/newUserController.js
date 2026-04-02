@@ -1,6 +1,7 @@
-import { eq } from "drizzle-orm";
-import { newUsersTable } from "../model/schema.js";
-import {db} from "../index.js"
+import { eq, sql } from "drizzle-orm";
+import { newUsersTable, userTable } from "../model/schema.js";
+import { db } from "../index.js"
+import bcrypt from "bcrypt";
 
 export const createNewUser = async (req, res) => {
   const { data } = req.body;
@@ -147,3 +148,75 @@ export const deleteNewUser = async (req, res) => {
     });
   }
 };
+
+export const approveNewUser = async (req, res) => {
+  const { data } = req.body;
+  const { payload, id, status } = data;
+
+
+  if (status === "approved") {
+    try {
+
+      const user = await db.select().from(newUsersTable).where(eq(newUsersTable.id, Number(id)));
+
+      if (!user.length) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+
+
+      const hashedPassword = await bcrypt.hash(
+        `${user[0].name.toLowerCase()}`,
+        10
+      );
+
+      console.log({ ...payload, password: hashedPassword });
+
+      const adduser = await db.insert(userTable).values({ ...payload, password: hashedPassword });
+
+
+      const updatedUser = await db
+        .update(newUsersTable)
+        .set({ status: "approved" })
+        .where(eq(newUsersTable.id, Number(id)))
+        .returning();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+  else {
+    try {
+      const updatedUser = await db
+        .update(newUsersTable)
+        .set({ status: "rejected" })
+        .where(eq(newUsersTable.id, Number(id)))
+        .returning();
+
+      if (!updatedUser.length) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+      else {
+        return res.status(200).json({
+          success: true,
+          data: updatedUser[0],
+          message: "User rejected successfully",
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+
+}
